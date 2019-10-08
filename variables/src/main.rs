@@ -3,7 +3,7 @@ fn main() {
     println!("i16 max value: {}, {}", get_signed_integer_max_value(16u8) as i16, std::i16::MAX);
     println!("i32 max value: {}, {}", get_signed_integer_max_value(32u8) as i32, std::i32::MAX);
     println!("i64 max value: {}, {}", get_signed_integer_max_value(64u8) as i64, std::i64::MAX);
-    println!("i128 max value: {}", std::i128::MAX); // can't calculate this value using the get_signed_integer_max_value function because the max value would be overflown by 1
+    println!("i128 max value: {}", std::i128::MAX); // can't calculate this value using the get_signed_integer_max_value function because the max value would be overflowed by 1
 
     println!("i8 min value: {}, {}", get_signed_integer_min_value(8u8) as i8, std::i8::MIN);
     println!("i16 min value: {}, {}", get_signed_integer_min_value(16u8) as i16, std::i16::MIN);
@@ -15,7 +15,7 @@ fn main() {
     println!("u16 max value: {}, {}", get_unsigned_integer_max_value(16u8) as u16, std::u16::MAX);
     println!("u32 max value: {}, {}", get_unsigned_integer_max_value(32u8) as u32, std::u32::MAX);
     println!("u64 max value: {}, {}", get_unsigned_integer_max_value(64u8) as u64, std::u64::MAX);
-    println!("u128 max value: {}", std::u128::MAX); // can't calculate this value using the get_unsigned_integer_max_value function because the max value would be overflown by 1
+    println!("u128 max value: {}", std::u128::MAX); // can't calculate this value using the get_unsigned_integer_max_value function because the max value would be overflowed by 1
 }
 
 /* Each signed variant can store numbers from -(2^(n-1)) to 2^(n-1)-1 inclusive,
