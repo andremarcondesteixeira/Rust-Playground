@@ -16,6 +16,20 @@ fn main() {
     println!("u32 max value: {}, {}", get_unsigned_integer_max_value(32u8) as u32, std::u32::MAX);
     println!("u64 max value: {}, {}", get_unsigned_integer_max_value(64u8) as u64, std::u64::MAX);
     println!("u128 max value: {}", std::u128::MAX); // can't calculate this value using the get_unsigned_integer_max_value function because the max value would be overflowed by 1
+
+    println!("1 = 1 = {}", 1 + 1);
+    println!("1 - 1 = {}", 1 - 1);
+    println!("2 * 9 = {}", 2 * 9);
+    println!("5 / 8 = {}", 5 / 8);
+    println!("8 % 5 = {}", 8 % 5);
+
+    let fp1 = 12.3_f32;
+    let fp2 = 12.6_f64;
+    let b1 = true;
+    let ch1 = 'a';
+    let ch2 = '🙃';
+
+    println!("{}, {}, {}, {}, {}", fp1, fp2, b1, ch1, ch2);
 }
 
 /* Each signed variant can store numbers from -(2^(n-1)) to 2^(n-1)-1 inclusive,
