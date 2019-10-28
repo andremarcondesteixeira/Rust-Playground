@@ -3,7 +3,7 @@ fn main() {
     let mut divider: u32;
     let mut is_prime_number: bool;
 
-    for number in (2..101).rev() {
+    for number in 2..101 {
         divider = number - 1;
 
         is_prime_number = loop {
