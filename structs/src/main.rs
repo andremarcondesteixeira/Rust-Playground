@@ -8,7 +8,7 @@ fn main() {
             horsepowers: 2000,
         },
     };
-
+    
     print_car(&car);
 
     let car2 = Car {
