@@ -3,7 +3,25 @@ use std::error::Error;
 
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.filename)?;
+    let query = config.query;
+    
+    for line in search(&query, &contents) {
+        println!("{}", line);
+    }
+    
     Ok(())
+}
+
+pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut result: Vec<&'a str> = Vec::new();
+    
+    for line in content.lines() {
+        if line.contains(query) {
+            result.push(line);
+        }
+    }
+    
+    result
 }
 
 pub struct Config<'a> {
@@ -34,5 +52,7 @@ mod tests {
 Rust:
 safe, fast, productive.
 Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
     }
 }
