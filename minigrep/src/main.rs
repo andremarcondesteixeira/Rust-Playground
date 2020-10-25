@@ -2,14 +2,28 @@ use std::{env, process};
 use minigrep::Config;
 
 fn main() {
+    run(get_args());
+}
+
+fn get_args() -> Config {
     let args: Vec<String> = env::args().collect();
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(args).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {}", err);
         process::exit(0);
     });
+    config
+}
 
-    if let Err(e) = minigrep::run(config) {
-        println!("Application error: {}", e);
-        process::exit(1);
+fn run(args: Config) {
+    match minigrep::run(args) {
+        Ok(result) => {
+            for line in result {
+                println!("{}", line);
+            }
+        }
+        Err(e) => {
+            println!("Application error: {}", e);
+            process::exit(1);
+        }
     }
 }
