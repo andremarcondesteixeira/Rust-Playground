@@ -14,18 +14,30 @@ use std::error::Error;
 pub fn run(config: Config) -> Result<Vec<String>, Box<dyn Error>> {
     let query = config.query;
     let content = fs::read_to_string(config.filename)?;
-    let mut result: Vec<String> = Vec::new();
-    for line in search(&query, &content) {
-        result.push(String::from(line));
+    
+    if config.case_sensitive {
+        Ok(search(query, content))
+    } else {
+        Ok(search_case_insensitive(query, content))
     }
-    Ok(result)
 }
 
-pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
-    let mut result: Vec<&'a str> = Vec::new();
+pub fn search(query: String, content: String) -> Vec<String> {
+    let mut result: Vec<String> = Vec::new();
     for line in content.lines() {
-        if line.contains(query) {
-            result.push(line);
+        if line.contains(&query) {
+            result.push(String::from(line));
+        }
+    }
+    result
+}
+
+pub fn search_case_insensitive(query: String, content: String) -> Vec<String> {
+    let mut result: Vec<String> = Vec::new();
+    let query = query.to_lowercase();
+    for line in content.lines() {
+        if line.to_lowercase().contains(&query) {
+            result.push(String::from(line));
         }
     }
     result
@@ -34,6 +46,7 @@ pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
 pub struct Config {
     query: String,
     filename: String,
+    case_sensitive: bool,
 }
 
 impl Config {
@@ -44,7 +57,7 @@ impl Config {
 
         let filename = args.pop().unwrap();
         let query = args.pop().unwrap();
-        Ok(Config { query, filename })
+        Ok(Config { query, filename, case_sensitive: true })
     }
 }
 
@@ -71,14 +84,28 @@ mod tests {
 
     #[test]
     fn case_sensitive_search() {
-        let query = "duct";
-        let content = "\
+        let query = String::from("duct");
+        let content = String::from("\
             Rust:\n\
             safe, fast, productive.\n\
             Pick three.\n\
-            Duct tape.";
+            Duct tape.");
 
         assert_eq!(vec!["safe, fast, productive."], search(query, content));
+    }
+
+    #[test]
+    fn case_insensitive_search() {
+        let query = String::from("dUcT");
+        let content = String::from("\
+            Rust:\n\
+            safe, fast, productive.\n\
+            Pick three.\n\
+            Duct tape.");
+        let expected_result = vec!["safe, fast, productive.", "Duct tape."];
+        let actual_result = search_case_insensitive(query, content);
+        
+        assert_eq!(expected_result, actual_result);
     }
 
     #[test]
