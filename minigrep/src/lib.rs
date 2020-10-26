@@ -59,7 +59,11 @@ mod tests {
 
     #[test]
     fn test_output() {
-        let parameters: Vec<String> = vec![String::from(""), String::from("forest"), String::from("a file")];
+        // First param when running a console application is ignored
+        let waste = String::from("");
+        let query = String::from("forest");
+        let fake_file = String::from("fake file");
+        let parameters: Vec<String> = vec![waste, query, fake_file];
         let config = Config::new(parameters).unwrap();
         let result = run(config).unwrap();
         assert_eq!(vec!["In the forest"], result);
