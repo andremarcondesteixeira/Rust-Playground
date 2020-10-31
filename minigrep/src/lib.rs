@@ -9,12 +9,12 @@ mod conditional_imports {
 }
 
 use conditional_imports::*;
+use std::env;
 use std::error::Error;
 
 pub fn run(config: Config) -> Result<Vec<String>, Box<dyn Error>> {
     let query = config.query;
     let content = fs::read_to_string(config.filename)?;
-    
     if config.case_sensitive {
         Ok(search(query, content))
     } else {
@@ -57,7 +57,13 @@ impl Config {
 
         let filename = args.pop().unwrap();
         let query = args.pop().unwrap();
-        Ok(Config { query, filename, case_sensitive: true })
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+
+        Ok(Config {
+            query,
+            filename,
+            case_sensitive,
+        })
     }
 }
 
@@ -85,11 +91,13 @@ mod tests {
     #[test]
     fn case_sensitive_search() {
         let query = String::from("duct");
-        let content = String::from("\
+        let content = String::from(
+            "\
             Rust:\n\
             safe, fast, productive.\n\
             Pick three.\n\
-            Duct tape.");
+            Duct tape.",
+        );
 
         assert_eq!(vec!["safe, fast, productive."], search(query, content));
     }
@@ -97,20 +105,22 @@ mod tests {
     #[test]
     fn case_insensitive_search() {
         let query = String::from("dUcT");
-        let content = String::from("\
+        let content = String::from(
+            "\
             Rust:\n\
             safe, fast, productive.\n\
             Pick three.\n\
-            Duct tape.");
+            Duct tape.",
+        );
         let expected_result = vec!["safe, fast, productive.", "Duct tape."];
         let actual_result = search_case_insensitive(query, content);
-        
         assert_eq!(expected_result, actual_result);
     }
 
     #[test]
     fn creating_a_new_config_object_requires_3_parameters() {
-        let parameters: Vec<String> = vec![String::from(""), String::from("foo"), String::from("bar")];
+        let parameters: Vec<String> =
+            vec![String::from(""), String::from("foo"), String::from("bar")];
         let config = Config::new(parameters).unwrap();
         assert_eq!("foo", config.query);
         assert_eq!("bar", config.filename);
