@@ -3,7 +3,7 @@ struct Counter {
 }
 
 impl Counter {
-    fn new() -> Counter {
+    fn _new() -> Counter {
         Counter { count: 0 }
     }
 }
@@ -25,7 +25,7 @@ fn main() {}
 
 #[test]
 fn calling_next_directly() {
-    let mut counter = Counter::new();
+    let mut counter = Counter::_new();
 
     assert_eq!(counter.next(), Some(1));
     assert_eq!(counter.next(), Some(2));
@@ -37,8 +37,8 @@ fn calling_next_directly() {
 
 #[test]
 fn using_other_iterator_trait_methods() {
-    let sum: u32 = Counter::new()
-        .zip(Counter::new().skip(1))
+    let sum: u32 = Counter::_new()
+        .zip(Counter::_new().skip(1))
         .map(|(a, b)| a * b)
         .filter(|x| x % 3 == 0)
         .sum();
