@@ -11,7 +11,7 @@ fn main() {
 
     struct My {
         x: String,
-    };
+    }
 
     let my_struct = My {
         x: String::from("x"),
