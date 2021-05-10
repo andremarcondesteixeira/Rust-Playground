@@ -1,7 +1,7 @@
 pub mod hosting;
 
 mod serving {
-    fn take_order() {}
-    fn server_order() {}
-    fn take_payment() {}
+    fn _take_order() {}
+    fn _server_order() {}
+    fn _take_payment() {}
 }
