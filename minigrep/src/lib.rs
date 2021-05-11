@@ -50,18 +50,21 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(mut args: Vec<String>) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
-
-        let filename = args.pop().unwrap();
-        let query = args.pop().unwrap();
+    pub fn new(mut args: impl Iterator<Item = impl ToString>) -> Result<Config, &'static str> {
+        args.next();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query"),
+        };
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
 
         Ok(Config {
-            query,
-            filename,
+            query: query.to_string(),
+            filename: filename.to_string(),
             case_sensitive,
         })
     }
@@ -83,7 +86,7 @@ mod tests {
         let query = String::from("forest");
         let fake_file = String::from("fake file");
         let parameters: Vec<String> = vec![waste, query, fake_file];
-        let config = Config::new(parameters).unwrap();
+        let config = Config::new(parameters.iter()).unwrap();
         let result = run(config).unwrap();
         assert_eq!(vec!["In the forest"], result);
     }
@@ -121,7 +124,7 @@ mod tests {
     fn creating_a_new_config_object_requires_3_parameters() {
         let parameters: Vec<String> =
             vec![String::from(""), String::from("foo"), String::from("bar")];
-        let config = Config::new(parameters).unwrap();
+        let config = Config::new(parameters.iter()).unwrap();
         assert_eq!("foo", config.query);
         assert_eq!("bar", config.filename);
     }
