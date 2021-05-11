@@ -17,7 +17,7 @@ fn main() {
         x: String::from("x"),
     };
 
-    let callback = || return my_struct.x;
+    let callback = || my_struct.x;
 
     println!("{}", callback());
 }
