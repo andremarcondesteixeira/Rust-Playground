@@ -1,20 +1,17 @@
+mod fakefs;
+
 #[cfg(test)]
-mod conditional_imports {
-    pub mod fs;
-}
+use fakefs as myfs;
 
 #[cfg(not(test))]
-mod conditional_imports {
-    pub use std::fs;
-}
+use std::fs as myfs;
 
-use conditional_imports::*;
 use std::env;
 use std::error::Error;
 
 pub fn run(config: Config) -> Result<Vec<String>, Box<dyn Error>> {
     let query = config.query;
-    let content = fs::read_to_string(config.filename)?;
+    let content = myfs::read_to_string(config.filename)?;
     if config.case_sensitive {
         Ok(search(query, content))
     } else {
