@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 fn main() {
     let b = Box::new(5);
     println!("b = {}", b);
@@ -13,13 +15,34 @@ fn main() {
     assert_eq!(5, x);
     assert_eq!(5, *y);
 
-    let x2 = 5;
-    let y2 = Box::new(x);
-    assert_eq!(5, x2);
-    assert_eq!(5, *y2);
+    let x = 5;
+    let y = Box::new(x);
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+
+    let x = 5;
+    let y = MyBox::new(x);
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
 }
 
 enum List<T> {
     Cons(T, Box<List<T>>),
     Nil
+}
+
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.0
+    }
 }
