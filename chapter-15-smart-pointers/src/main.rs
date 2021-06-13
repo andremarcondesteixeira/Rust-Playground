@@ -1,14 +1,20 @@
-use std::ops::Deref;
+use std::{fmt::Display, ops::Deref, rc::Rc};
 
 fn main() {
+    use List::{Cons, Nil};
+
     let b = Box::new(5);
     println!("b = {}", b);
 
-    let _cons = List::Cons::<i32>(1,
-        Box::new(List::Cons(2,
-            Box::new(List::Cons(3,
-                Box::new(List::Cons(4,
-                    Box::new(List::Nil))))))));
+    let _cons = Rc::new(
+        Cons(1, Rc::new(
+            Cons(2, Rc::new(
+                Cons(3, Rc::new(
+                    Cons(4, Rc::new(
+                        Nil)))))))));
+
+    let _cons2 = Cons(1, Rc::clone(&_cons));
+    let _cons2 = Cons(1, Rc::clone(&_cons));
 
     let x = 5;
     let y = &x;
@@ -27,22 +33,29 @@ fn main() {
 }
 
 enum List<T> {
-    Cons(T, Box<List<T>>),
+    Cons(T, Rc<List<T>>),
     Nil
 }
 
-struct MyBox<T>(T);
+#[derive(Debug)]
+struct MyBox<T: Display>(T);
 
-impl<T> MyBox<T> {
+impl<T: Display> MyBox<T> {
     fn new(x: T) -> MyBox<T> {
         MyBox(x)
     }
 }
 
-impl<T> Deref for MyBox<T> {
+impl<T: Display> Deref for MyBox<T> {
     type Target = T;
 
     fn deref(&self) -> &T {
         &self.0
+    }
+}
+
+impl<T: Display> Drop for MyBox<T> {
+    fn drop(&mut self) {
+        println!("{} was dropped", self.0);
     }
 }
