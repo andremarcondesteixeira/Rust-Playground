@@ -1,5 +1,7 @@
 use std::{fmt::Display, ops::Deref, rc::Rc};
 
+mod interior_mutability;
+
 fn main() {
     use List::{Cons, Nil};
 
