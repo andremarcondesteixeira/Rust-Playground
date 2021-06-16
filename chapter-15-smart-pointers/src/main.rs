@@ -1,6 +1,7 @@
 use std::{fmt::Display, ops::Deref, rc::Rc};
 
 mod interior_mutability;
+mod tree;
 
 fn main() {
     use List::{Cons, Nil};
@@ -32,6 +33,8 @@ fn main() {
     let y = MyBox::new(x);
     assert_eq!(5, x);
     assert_eq!(5, *y);
+
+    tree::run();
 }
 
 enum List<T> {
